@@ -26,7 +26,7 @@ export default function LoginScreen() {
         setSenha(data.senha);
         console.log('Login efetuado com sucesso - 200');
         alert('Login efetuado com sucesso');
-        navigation.navigate('Home', { login, senha });
+        navigation.navigate('Bottom', { login, senha });
       } else {
         alert('Login ou senha incorretos', response.status);
       }
