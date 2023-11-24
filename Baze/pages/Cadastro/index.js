@@ -10,14 +10,14 @@ export default function CadastroScreen() {
     navigation.navigate('Login');
   };
 
-  const genderOptions = ['Masculino', 'Feminino', 'Outro'];
+  //const genderOptions = ['Masculino', 'Feminino', 'Outro'];
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [login, setLogin] = useState('');
   const [idade, setIdade] = useState('');
-  const [peso, setPeso] = useState('');
-  const [altura, setAltura] = useState('');
+  // const [peso, setPeso] = useState('');
+  // const [altura, setAltura] = useState('');
   const [rg, setRg] = useState('');
   const [cpf, setCpf] = useState('');
   const [genero, setGenero] = useState('');
@@ -31,18 +31,7 @@ export default function CadastroScreen() {
         headers: {
           'Content-type': 'application/json',
         },
-        body: JSON.stringify({
-          nome,
-          email,
-          login,
-          idade,
-          peso,
-          altura,
-          rg,
-          cpf,
-          genero,
-          senha,
-        }),
+        body: JSON.stringify({nome, email, login,senha, idade,  rg, cpf, genero, }),
       });
 
       if (response.status === 201) {
@@ -50,13 +39,13 @@ export default function CadastroScreen() {
         setNome(data.nome);
         setEmail(data.email);
         setLogin(data.login);
+        setSenha(data.senha);
         setIdade(data.idade);
-        setPeso(data.peso);
-        setAltura(data.altura);
+        // setPeso(data.peso);
+        // setAltura(data.altura);
         setRg(data.rg);
         setCpf(data.cpf);
         setGenero(data.genero);
-        setSenha(data.senha);
 
         console.log('Cadastro efetuado com sucesso - 200');
         alert('Cadastro efetuado com sucesso');
@@ -64,13 +53,12 @@ export default function CadastroScreen() {
           nome,
           email,
           login,
+          senha,
           idade,
-          peso,
-          altura,
           rg,
           cpf,
           genero,
-          senha,
+          
         });
       } else {
         alert('Credenciais irregulares', response.status);
@@ -126,23 +114,23 @@ export default function CadastroScreen() {
             />
         </Animatable.View>
 
-        <Animatable.View animation="fadeIn" style={styles.inputContainer}>
+        {/* <Animatable.View animation="fadeIn" style={styles.inputContainer}>
             <TextInput
                 placeholder="Digite seu peso"
                 value={peso}
                 onChangeText={(text) => setPeso(text)}
                 style={styles.input}
             />
-        </Animatable.View>
+        </Animatable.View> */}
 
-        <Animatable.View animation="fadeIn" style={styles.inputContainer}>
+        {/* <Animatable.View animation="fadeIn" style={styles.inputContainer}>
             <TextInput
                 placeholder="Digite sua altura"
                 value={altura}
                 onChangeText={(text) => setAltura(text)}
                 style={styles.input}
             />
-        </Animatable.View>
+        </Animatable.View> */}
 
         <Animatable.View animation="fadeIn" style={styles.inputContainer}>
             <TextInput

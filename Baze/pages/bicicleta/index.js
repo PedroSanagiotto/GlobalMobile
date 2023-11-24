@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, ImageBackground, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function BikeScreen() {
+export default function BikeScreen({ route }) {
   const [aro, setAro] = useState('');
   const [quadro, setQuadro] = useState('');
   const [peso, setPeso] = useState('');
@@ -14,24 +15,32 @@ export default function BikeScreen() {
 
   const cadastrarBicicleta = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/bicicletas', {
-        aro,
-        quadro,
-        peso,
-        cor,
-        tipo,
-        marcha,
-      });
-
-      // Lógica de sucesso (opcional)
+      // Recupera o token armazenado
+      const userToken = await AsyncStorage.getItem('authToken');
+  
+      const response = await axios.post(
+        'http://192.168.0.2:8080/api/bicicletas',
+        {
+          aro,
+          quadro,
+          peso,
+          cor,
+          tipo,
+          marcha,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+  
       console.log('Bicicleta cadastrada com sucesso!', response.data);
-
-      // Atualiza o estado para indicar que uma bicicleta foi cadastrada
+  
       setBikeCadastrada(true);
-      // Salva as informações da bicicleta cadastrada
-      setBikeInfo(`Bike ${response.data.id} cadastrada - Descrição: ${response.data.descricao}`);
+      setBikeInfo(`Bike ${response.data.id} cadastrada `);
     } catch (error) {
-      // Lógica de tratamento de erro (opcional)
       console.error('Erro ao cadastrar bicicleta:', error);
     }
   };
@@ -46,7 +55,6 @@ export default function BikeScreen() {
     setTipo('');
     setMarcha('');
   };
-
 
   return (
     <View style={styles.container}>

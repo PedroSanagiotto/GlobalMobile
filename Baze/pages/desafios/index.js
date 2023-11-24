@@ -1,72 +1,78 @@
 import React, { useEffect, useState } from 'react';
-import { View, ImageBackground, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function DesafioScreeen() {
+export default function DesafioScreen() {
   const [challenge, setChallenge] = useState(null);
   const [challengeId, setChallengeId] = useState(1);
 
+  useEffect(() => {
+    fetchChallenge(challengeId);
+  }, [challengeId]);
+
   const fetchChallenge = async (id) => {
     try {
-      const response = await axios.get(`${id}`); // colocar a url da api
+      // Recupera o token armazenado
+      const userToken = await AsyncStorage.getItem('authToken');
+
+      const response = await axios.get(`http://192.168.0.2:8080/api/desafios/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
       setChallenge(response.data);
     } catch (error) {
       console.error('Erro ao obter os dados do desafio:', error);
     }
   };
 
-  useEffect(() => {
-    fetchChallenge(challengeId);
-  }, [challengeId]);
-
-  const handleNextChallenge = () => {
+  const handleNextChallenge = async () => {
     // Incrementa o ID do desafio ou reinicia se atingir o último ID
     setChallengeId((prevId) => (prevId >= 3 ? 1 : prevId + 1));
   };
 
   return (
     <View style={styles.container}>
-     
-        {challenge && (
-          <View style={styles.challengeContainer}>
-            <Text style={styles.title}>Desafio</Text>
-            <Text style={styles.description}>{challenge.desafio}</Text>
-            <Text style={styles.description}>{challenge.descricao}</Text>
-            <Text style={styles.boldText}>{`Tempo: ${challenge.tempo}`}</Text>
-            <Text style={styles.description}>{`Prêmio: ${challenge.premio}`}</Text>
-          </View>
-        )}
-        <Pressable
-          style={styles.nextButton}
-          onPress={handleNextChallenge}
-        >
-          <Text style={styles.nextButtonText}>Próximo Desafio</Text>
-        </Pressable>
-     
+      <Text style={styles.title}>Desafio</Text>
+      {challenge && (
+        <View style={styles.challengeContainer}>
+          
+          <Text style={styles.descriptionTitle}>{challenge.desafio}</Text>
+          <Text style={styles.description}>{challenge.descricao}</Text>
+          <Text style={styles.boldText}>{`Tempo: ${challenge.tempo}`}</Text>
+          
+        </View>
+      )}
+      <Pressable style={styles.nextButton} onPress={handleNextChallenge}>
+        <Text style={styles.nextButtonText}>Próximo Desafio</Text>
+      </Pressable>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     textAlign: 'center',
     backgroundColor: '#202020',
   },
   challengeContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 8,
+    borderRadius: 5,
     marginBottom: 16,
   },
+
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    marginTop: 150,
+    marginTop: 15,
     marginBottom: 20,
     textAlign: 'center',
-    colorcolor: '#313338',
+    color: '#313338',
     textShadowColor: 'rgba(0, 0, 0, 0.1)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
@@ -74,6 +80,10 @@ const styles = StyleSheet.create({
     backgroundClip: 'text',
     color: 'transparent',
     backgroundImage: 'linear-gradient(45deg, #35bbdd, #313338)',
+  },
+  descriptionTitle: {
+    fontSize: 20,
+    marginBottom: 8,
   },
   description: {
     fontSize: 16,
@@ -85,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   nextButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#313338',
     padding: 10,
     borderRadius: 5,
     marginTop: 16,

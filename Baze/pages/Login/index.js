@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Pressable, View, Text, TextInput, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+
+  const navigateToCadastro = () => {
+    navigation.navigate('Cadastro');
+  };
 
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
@@ -17,13 +22,15 @@ export default function LoginScreen() {
         headers: {
           'Content-type': 'application/json',
         },
-        body: JSON.stringify({login, senha }),
+        body: JSON.stringify({  login, senha }),
       });
-
+  
       if (response.status === 200) {
         const data = await response.json();
-        setLogin(data.login);
-        setSenha(data.senha);
+  
+        // Armazena o token no AsyncStorage
+        await AsyncStorage.setItem('authToken', data.token);
+  
         console.log('Login efetuado com sucesso - 200');
         alert('Login efetuado com sucesso');
         navigation.navigate('Bottom', { login, senha });
@@ -35,10 +42,7 @@ export default function LoginScreen() {
       alert('Erro ao efetuar login');
     }
   }
-
-  const navigateToCadastro = () => {
-    navigation.navigate('Cadastro');
-  };
+ 
 
   return (
     <View style={styles.container}>
