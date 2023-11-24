@@ -9,3 +9,17 @@ export default function App() {
   );
 }
 
+ //Integrantes
+
+  // Turma 2TDSS
+
+  // André Massao Nakamura RM93046
+
+  // Andrea Madureira RM95489
+
+  // Erick de Luca Pereira RM94554
+
+  // Matheus Alencar RM94642
+
+  // Pedro Henrique Sanagiotto RM93182
+ 
